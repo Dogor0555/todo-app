@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App - Gestor de Tareas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✅ Mi Lista de Tareas</h1>
+        </header>
+
+        <div class="add-task">
+            <input type="text" id="taskInput" placeholder="Escribe una nueva tarea...">
+            <button onclick="addNewTask()">Agregar Tarea</button>
+        </div>
+
+        <div id="loading" class="loading">Cargando tareas...</div>
+
+        <div id="tasksContainer" class="tasks-container">
+            <!-- Las tareas se cargarán aquí dinámicamente -->
+        </div>
+
+        <div id="errorMessage" class="error hidden">
+            Error al cargar las tareas. Intenta recargar la página.
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: postgres:15-alpine
@@ -10,6 +11,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - todo-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d todoapp"]
       interval: 5s
@@ -21,7 +24,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: db  # ¡IMPORTANTE! Usar 'db' en lugar de 'localhost'
+      DB_HOST: db
       DB_USER: postgres
       DB_PASSWORD: vertrigo
       DB_NAME: todoapp
@@ -31,7 +34,21 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./backend/src:/app/src  # Hot reload para desarrollo
+      - ./backend/src:/app/src
+    networks:
+      - todo-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - todo-network
 
 volumes:
   postgres_data:
+
+networks:
+  todo-network:
