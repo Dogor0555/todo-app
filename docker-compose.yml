@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: vertrigo
+      POSTGRES_DB: todoapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d todoapp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db  # ¡IMPORTANTE! Usar 'db' en lugar de 'localhost'
+      DB_USER: postgres
+      DB_PASSWORD: vertrigo
+      DB_NAME: todoapp
+      DB_PORT: 5432
+      PORT: 3000
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src  # Hot reload para desarrollo
+
+volumes:
+  postgres_data:
